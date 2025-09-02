@@ -1,0 +1,43 @@
+{
+  "bookSourceComment": "Book source for UAA novels, tailored for AiYueShuXiang. Requires login for some content.",
+  "bookSourceGroup": "Novels, Adult",
+  "bookSourceName": "UAA Novels",
+  "bookSourceType": 0,
+  "bookSourceUrl": "https://www.uaa.com/",
+  "enabled": true,
+  "enabledExplore": true,
+  "exploreUrl": "@js:\nsort = [];\npush = (title, url, type) => sort.push({\n title: title,\n url: url,\n style: {\n layout_flexGrow: 1,\n layout_flexBasisPercent: type\n }\n});\n$ = (x) => `https://www.uaa.com/api/novel/app/novel/search?${x}&orderType=2&page={{page}}&searchType=1&size=40`;\npush('All Categories', $(''), 1);\n['Urban Passion', 'Campus Romance', 'Family Drama', 'System Powers', 'Time Travel', 'Eastern Fantasy'].map(p => {\n push(p, $(`category=${encodeURIComponent(p)}`), 0.25);\n});\nJSON.stringify(sort);",
+  "header": "",
+  "ruleSearch": {
+    "bookList": ".[?(@.title)]",
+    "name": "title",
+    "author": "authors||'UAA'",
+    "intro": "shortBrief##\\s*",
+    "coverUrl": "coverUrl",
+    "bookUrl": "id||novelId##^##intro?id=",
+    "kind": "{{$.finished##1##Complete}},{{$.pornRateDesc##.*\\(|\\)}},{{$.categories&&tags}}",
+    "lastChapter": "latestUpdate",
+    "wordCount": "wordCount"
+  },
+  "ruleBookInfo": {
+    "name": "title",
+    "author": ".authors||'UAA'",
+    "intro": " {{$..brief}}\n­\nStarted: {{$..createTime##(.*?)T(.*?)\\.##$1 $2###}}\nUpdated: {{$..updateTime##(.*?)T(.*?)\\.##$1 $2###}}\n{{$..categories&&tags##,|\\n## }}",
+    "coverUrl": ".coverUrl",
+    "kind": "{{java.getString('.finished')==1?'Complete':'Ongoing'}},{{$.pornRateDesc##\\(.*\\)##Explicit}}",
+    "lastChapter": ".latestUpdate",
+    "wordCount": ".wordCount",
+    "tocUrl": ".id##^##catalog/"
+  },
+  "ruleToc": {
+    "chapterList": ".[?(@.title)]",
+    "chapterName": "title",
+    "chapterUrl": "@js:{{$.type}}!=2?'chapter/'+$.id:'chapter/vip/'+$.id"
+  },
+  "ruleContent": {
+    "content": ".article@html\n@js:\nr = result;\n/请访问源网站！/.test(r)?java.toast('Please login!'):r;",
+    "replaceRegex": "##'\\)\" onmouseout=\"touchEnd\\(\\)\">"
+  },
+  "loginUrl": "https://www.uaa.com/login",
+  "lastUpdateTime": 1727841600000
+}
